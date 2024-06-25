@@ -34,34 +34,74 @@
         .details span {
             font-weight: bold;
         }
+        .details .large-text {
+            font-size: 1.5em; /* Larger font size for title, description, and price */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
     </style>
 </head>
 <body>
-<h1>Apartment Details</h1>
 <div class="listing-details">
-    <h2 th:text="${apartment.title}">Title</h2>
+    <h1 class="large-text" th:text="${apartment.title}">Title</h1>
+    <img th:src="'data:image/png;base64,' + ${image}" alt="Apartment Image"/>
     <div class="details">
-        <p><span>Description:</span> <span th:text="${apartment.description}">Description goes here</span></p>
-        <p><span>Price:</span> <span th:text="${apartment.price}">Price</span></p>
-        <p><span>Address:</span> <span th:text="${apartment.address}">Address goes here</span></p>
-        <p><span>Rooms:</span> <span th:text="${apartment.rooms}">Number of rooms</span></p>
-        <p><span>Size:</span> <span th:text="${apartment.sqm}">Size in sqm</span></p>
-        <p><span>Floor:</span> <span th:text="${apartment.floor}">Floor</span></p>
-        <p><span>Terrace Size:</span> <span th:text="${apartment.terraceSqm}">Terrace size in sqm</span></p>
-        <p><span>For Sale:</span> <span th:text="${apartment.forSale ? 'Yes' : 'No'}">Yes/No</span></p>
-        <p><span>For Lease:</span> <span th:text="${apartment.forLease ? 'Yes' : 'No'}">Yes/No</span></p>
-        <p><span>Owner:</span> <span th:text="${apartment.ownerName}">Owner Name</span></p>
-        <p><span>Contact:</span> <span th:text="${apartment.phoneNumber}">Phone Number</span></p>
-    </div>
-    <div>
-
-        <p>Image:</p>
-        <img th:src="'data:image/png;base64,' + ${image}" alt="Apartment Image"/>
-        </div>
+        <p class="large-text"><span>Description:</span> <span th:text="${apartment.description}">Description goes here</span></p>
+        <p class="large-text"><span>Price:</span> <span th:text="${apartment.price}">Price</span></p>
+        <table>
+            <tr>
+                <th>Address</th>
+                <td th:text="${apartment.address}">Address goes here</td>
+            </tr>
+            <tr>
+                <th>Rooms</th>
+                <td th:text="${apartment.rooms}">Number of rooms</td>
+            </tr>
+            <tr>
+                <th>Size (sqm)</th>
+                <td th:text="${apartment.sqm}">Size in sqm</td>
+            </tr>
+            <tr>
+                <th>Floor</th>
+                <td th:text="${apartment.floor}">Floor</td>
+            </tr>
+            <tr>
+                <th>Terrace Size (sqm)</th>
+                <td th:text="${apartment.terraceSqm}">Terrace size in sqm</td>
+            </tr>
+            <tr>
+                <th>For Sale</th>
+                <td th:text="${apartment.forSale ? 'Yes' : 'No'}">Yes/No</td>
+            </tr>
+            <tr>
+                <th>For Lease</th>
+                <td th:text="${apartment.forLease ? 'Yes' : 'No'}">Yes/No</td>
+            </tr>
+            <tr>
+                <th>Owner</th>
+                <td th:text="${apartment.ownerName}">Owner Name</td>
+            </tr>
+            <tr>
+                <th>Contact</th>
+                <td th:text="${apartment.phoneNumber}">Phone Number</td>
+            </tr>
+        </table>
     </div>
 </div>
 </body>
 </html>
+
+
 
 
 
@@ -104,8 +144,9 @@
 <!--    </style>-->
 <!--</head>-->
 <!--<body>-->
+<!--<h1>Apartment Details</h1>-->
 <!--<div class="listing-details">-->
-<!--    <h1 th:text="${apartment.title}">Title</h1>-->
+<!--    <h2 th:text="${apartment.title}">Title</h2>-->
 <!--    <div class="details">-->
 <!--        <p><span>Description:</span> <span th:text="${apartment.description}">Description goes here</span></p>-->
 <!--        <p><span>Price:</span> <span th:text="${apartment.price}">Price</span></p>-->
@@ -114,17 +155,17 @@
 <!--        <p><span>Size:</span> <span th:text="${apartment.sqm}">Size in sqm</span></p>-->
 <!--        <p><span>Floor:</span> <span th:text="${apartment.floor}">Floor</span></p>-->
 <!--        <p><span>Terrace Size:</span> <span th:text="${apartment.terraceSqm}">Terrace size in sqm</span></p>-->
-<!--        <p><span>For Sale:</span> <span th:text="${apartment.ForSale ? 'Yes' : 'No'}">Yes/No</span></p>-->
-<!--        <p><span>For Lease:</span> <span th:text="${apartment.ForLease ? 'Yes' : 'No'}">Yes/No</span></p>-->
+<!--        <p><span>For Sale:</span> <span th:text="${apartment.forSale ? 'Yes' : 'No'}">Yes/No</span></p>-->
+<!--        <p><span>For Lease:</span> <span th:text="${apartment.forLease ? 'Yes' : 'No'}">Yes/No</span></p>-->
 <!--        <p><span>Owner:</span> <span th:text="${apartment.ownerName}">Owner Name</span></p>-->
 <!--        <p><span>Contact:</span> <span th:text="${apartment.phoneNumber}">Phone Number</span></p>-->
 <!--    </div>-->
-<!--    <div th:if="${apartment.imageFilenames != null}">-->
-<!--        <h2>Images:</h2>-->
-<!--        <div th:each="image : ${#strings.split(apartment.imageFilenames, ',')}">-->
-<!--            <img th:src="@{'/listing-images/' + ${image}}" alt="Apartment Image">-->
+<!--    <div>-->
+
+<!--        <p>Image:</p>-->
+<!--        <img th:src="'data:image/png;base64,' + ${image}" alt="Apartment Image"/>-->
 <!--        </div>-->
 <!--    </div>-->
-<!--    </div>-->
+<!--</div>-->
 <!--</body>-->
 <!--</html>-->
