@@ -5,8 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.Type;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.Types;
 import java.util.List;
 
 @Data
@@ -36,9 +39,14 @@ public abstract class Listing {
     public boolean ForLease;
     public String ownerName;
     public String phoneNumber;
-    @ElementCollection
-    @CollectionTable(name = "listing_images", joinColumns = @JoinColumn(name = "listing_id"))
-    @Column(name = "image_data")
-    public List<byte[]> images;
+    public String imageName;
+    public String imageType;
+
+//    @ElementCollection
+//    @CollectionTable(name = "listing_images", joinColumns = @JoinColumn(name = "listing_id"))
+//    @Column(name = "image_data")
+    @Lob
+    @JdbcTypeCode(Types.LONGVARBINARY)
+    public byte[] imageData;
 
 }

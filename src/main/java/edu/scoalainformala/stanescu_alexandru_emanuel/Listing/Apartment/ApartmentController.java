@@ -14,7 +14,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.print.attribute.standard.Media;
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
+
+import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
 
 @Controller
 @RequestMapping("/apartment")
@@ -47,8 +50,12 @@ public class ApartmentController {
 
     @GetMapping("/view/{id}")
     public String viewApartment(@PathVariable int id, Model model) {
+        Apartment ap = apartmentService.get(id);
+        byte[] imageData = apartmentService.downloadImage(id);
+        String base64Image = Base64.getEncoder().encodeToString(imageData);
 
-        model.addAttribute("apartment", apartmentService.get(id));
+        model.addAttribute("apartment", ap);
+        model.addAttribute("image", base64Image);
 
         return "viewApartment";
 
@@ -62,7 +69,7 @@ public class ApartmentController {
     }
 
     @PostMapping("/create")
-    public String createApartment(@ModelAttribute Apartment apartment, @RequestParam("images") List<MultipartFile> images, Model model) {
+    public String createApartment(@ModelAttribute Apartment apartment, @RequestParam("images") MultipartFile images, Model model) {
         try {
             System.out.println("am intrat in controller");
             apartmentService.save(apartment, images);
@@ -74,6 +81,14 @@ public class ApartmentController {
         }
         return "redirect:/apartment/all";
     }
+
+   /* @GetMapping("/{id}")
+    public ResponseEntity<?> downloadImage(@PathVariable Integer id) {
+        byte[] imageData = apartmentService.downloadImage(id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.valueOf(IMAGE_PNG_VALUE))
+                .body(imageData);
+    }*/
 
 
 //    @PostMapping

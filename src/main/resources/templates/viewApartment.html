@@ -53,10 +53,10 @@
         <p><span>Owner:</span> <span th:text="${apartment.ownerName}">Owner Name</span></p>
         <p><span>Contact:</span> <span th:text="${apartment.phoneNumber}">Phone Number</span></p>
     </div>
-    <div th:if="${apartment.images != null && !apartment.images.isEmpty()}">
-        <h3>Images:</h3>
-        <div th:each="image : ${apartment.images}">
-            <img th:src="@{'data:image/jpeg;base64,' + ${T(org.springframework.util.Base64Utils).encodeToString(image)}}" alt="Apartment Image">
+    <div>
+
+        <p>Image:</p>
+        <img th:src="'data:image/png;base64,' + ${image}" alt="Apartment Image"/>
         </div>
     </div>
 </div>

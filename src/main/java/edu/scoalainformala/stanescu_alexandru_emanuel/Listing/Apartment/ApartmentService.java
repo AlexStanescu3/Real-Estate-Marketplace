@@ -1,6 +1,8 @@
 package edu.scoalainformala.stanescu_alexandru_emanuel.Listing.Apartment;
 
+import edu.scoalainformala.stanescu_alexandru_emanuel.Util.FileUploadUtil;
 import jakarta.transaction.Transactional;
+import org.apache.commons.lang3.exception.ContextedRuntimeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.Id;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.zip.DataFormatException;
 
 @Service
 public class ApartmentService {
@@ -39,27 +42,41 @@ public class ApartmentService {
     }
 
     public Apartment get(int id) {
-        return apartmentRepository.findAll().stream()
+        Apartment ap = apartmentRepository.findAll().stream()
                 .filter(apartment -> apartment.getId() == id)
                 .findFirst()
                 .get();
+
+        return ap;
     }
 
-    public List<Apartment> save(Apartment apartment, List<MultipartFile> imageFiles) throws IOException {
+    public List<Apartment> save(Apartment apartment, MultipartFile imageFiles) throws IOException {
         List<byte[]> images = new ArrayList<>();
-        System.out.println("am intrat in metoda");
-        for (MultipartFile file : imageFiles) {
+        /*for (MultipartFile file : imageFiles) {
             images.add(file.getBytes());
-        }
-        System.out.println(images + " astea sunt imaginile");
-        apartment.setImages(images);
-        System.out.println(images + " astea sunt imaginile");
-        System.out.println(apartment + " astea sunt apartamentele");
+        }*/
+        apartment.setImageData(FileUploadUtil.compressImage(imageFiles.getBytes()));
+        apartment.setImageName(imageFiles.getOriginalFilename());
+        apartment.setImageType(imageFiles.getContentType());
         apartment.setId(getGreatestId() + 1);
         apartments.add(apartment);
         return apartmentRepository.saveAll(apartments);
     }
 
+    public byte[] downloadImage(Integer id) {
+        Optional<Apartment> apartmentRepo = apartmentRepository.findById(id);
+
+        return apartmentRepo.map(apartment -> {
+            try {
+
+                return FileUploadUtil.decompressImage(apartment.getImageData());
+            } catch (DataFormatException | IOException exception) {
+                throw new ContextedRuntimeException("Error downloading an image", exception)
+                        .addContextValue("ap ID",  apartment.getId())
+                        .addContextValue("aaap name", id);
+            }
+        }).orElse(null);
+    }
 
 
 //    @Transactional
