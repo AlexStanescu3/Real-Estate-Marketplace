@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+    <link rel="stylesheet" href="/users.css">
+    <link rel="stylesheet" href="/style.css">
+
+</head>
+<body>
+<h1>Users</h1>
+<table id="user-table">
+    <thead class="gray-bg">
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user: ${users}">
+        <td th:text="${user.id}"/>
+        <td th:text="${user.name}"/>
+        <td th:text="${user.email}"/>
+        <td>
+            <div>
+                <a th:href="${user.id}"><img class="button" src="/edit-button.svg"></a>
+                <a th:href="'delete/' + ${user.id}"><img class="button" src="/delete-icon.png"></a>
+            </div>
+
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

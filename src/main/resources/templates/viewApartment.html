@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Apartment Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        .listing-details {
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .listing-details img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .details {
+            margin-top: 20px;
+        }
+        .details p {
+            line-height: 1.6;
+        }
+        .details span {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<h1>Apartment Details</h1>
+<div class="listing-details">
+    <h2 th:text="${apartment.title}">Title</h2>
+    <div class="details">
+        <p><span>Description:</span> <span th:text="${apartment.description}">Description goes here</span></p>
+        <p><span>Price:</span> <span th:text="${apartment.price}">Price</span></p>
+        <p><span>Address:</span> <span th:text="${apartment.address}">Address goes here</span></p>
+        <p><span>Rooms:</span> <span th:text="${apartment.rooms}">Number of rooms</span></p>
+        <p><span>Size:</span> <span th:text="${apartment.sqm}">Size in sqm</span></p>
+        <p><span>Floor:</span> <span th:text="${apartment.floor}">Floor</span></p>
+        <p><span>Terrace Size:</span> <span th:text="${apartment.terraceSqm}">Terrace size in sqm</span></p>
+        <p><span>For Sale:</span> <span th:text="${apartment.forSale ? 'Yes' : 'No'}">Yes/No</span></p>
+        <p><span>For Lease:</span> <span th:text="${apartment.forLease ? 'Yes' : 'No'}">Yes/No</span></p>
+        <p><span>Owner:</span> <span th:text="${apartment.ownerName}">Owner Name</span></p>
+        <p><span>Contact:</span> <span th:text="${apartment.phoneNumber}">Phone Number</span></p>
+    </div>
+    <div th:if="${apartment.images != null && !apartment.images.isEmpty()}">
+        <h3>Images:</h3>
+        <div th:each="image : ${apartment.images}">
+            <img th:src="@{'data:image/jpeg;base64,' + ${T(org.springframework.util.Base64Utils).encodeToString(image)}}" alt="Apartment Image">
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Apartment Details</title>-->
+<!--    <style>-->
+<!--        body {-->
+<!--            font-family: Arial, sans-serif;-->
+<!--            max-width: 800px;-->
+<!--            margin: 0 auto;-->
+<!--            padding: 20px;-->
+<!--        }-->
+<!--        h1, h2 {-->
+<!--            text-align: center;-->
+<!--        }-->
+<!--        .listing-details {-->
+<!--            border: 1px solid #ccc;-->
+<!--            padding: 15px;-->
+<!--            border-radius: 5px;-->
+<!--            margin-top: 20px;-->
+<!--        }-->
+<!--        .listing-details img {-->
+<!--            width: 100%;-->
+<!--            height: auto;-->
+<!--            border-radius: 5px;-->
+<!--            margin-top: 10px;-->
+<!--        }-->
+<!--        .details {-->
+<!--            margin-top: 20px;-->
+<!--        }-->
+<!--        .details p {-->
+<!--            line-height: 1.6;-->
+<!--        }-->
+<!--        .details span {-->
+<!--            font-weight: bold;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="listing-details">-->
+<!--    <h1 th:text="${apartment.title}">Title</h1>-->
+<!--    <div class="details">-->
+<!--        <p><span>Description:</span> <span th:text="${apartment.description}">Description goes here</span></p>-->
+<!--        <p><span>Price:</span> <span th:text="${apartment.price}">Price</span></p>-->
+<!--        <p><span>Address:</span> <span th:text="${apartment.address}">Address goes here</span></p>-->
+<!--        <p><span>Rooms:</span> <span th:text="${apartment.rooms}">Number of rooms</span></p>-->
+<!--        <p><span>Size:</span> <span th:text="${apartment.sqm}">Size in sqm</span></p>-->
+<!--        <p><span>Floor:</span> <span th:text="${apartment.floor}">Floor</span></p>-->
+<!--        <p><span>Terrace Size:</span> <span th:text="${apartment.terraceSqm}">Terrace size in sqm</span></p>-->
+<!--        <p><span>For Sale:</span> <span th:text="${apartment.ForSale ? 'Yes' : 'No'}">Yes/No</span></p>-->
+<!--        <p><span>For Lease:</span> <span th:text="${apartment.ForLease ? 'Yes' : 'No'}">Yes/No</span></p>-->
+<!--        <p><span>Owner:</span> <span th:text="${apartment.ownerName}">Owner Name</span></p>-->
+<!--        <p><span>Contact:</span> <span th:text="${apartment.phoneNumber}">Phone Number</span></p>-->
+<!--    </div>-->
+<!--    <div th:if="${apartment.imageFilenames != null}">-->
+<!--        <h2>Images:</h2>-->
+<!--        <div th:each="image : ${#strings.split(apartment.imageFilenames, ',')}">-->
+<!--            <img th:src="@{'/listing-images/' + ${image}}" alt="Apartment Image">-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    </div>-->
+<!--</body>-->
+<!--</html>-->

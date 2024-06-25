@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create new listing!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .left-side, .right-side {
+            text-align: center;
+            flex: 1;
+        }
+        .link {
+            font-size: 2.5em;
+            font-weight: bold;
+            text-decoration: none;
+            color: black;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .image {
+            width: 400px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+<h1>List on our website your piece of Real Estate!</h1>
+<h2>You want to list:</h2>
+<br/>
+<div class="container">
+    <div class="left-side">
+        <a href="/apartment/create" class="link">An apartment</a>
+        <img class="image" src="/apartment1.jpg" alt="Apartment">
+    </div>
+    <div class="right-side">
+        <a href="/house/create" class="link">A house</a>
+        <img class="image" src="/house.jpg" alt="House">
+    </div>
+</div>
+</body>
+</html>

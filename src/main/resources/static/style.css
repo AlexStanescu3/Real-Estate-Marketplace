@@ -1,0 +1,16 @@
+table, ht, td {
+border: 2px solid black;
+border-collapse: collapse;
+}
+
+td, th {
+padding: 10px;
+}
+
+.gray-bg {
+background-color: lightgray;
+}
+
+.button {
+width: 30px;
+}
