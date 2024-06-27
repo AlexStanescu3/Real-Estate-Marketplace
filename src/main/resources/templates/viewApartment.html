@@ -18,12 +18,17 @@
             padding: 15px;
             border-radius: 5px;
             margin-top: 20px;
+            position: relative;
         }
         .listing-details img {
             width: 100%;
             height: auto;
             border-radius: 5px;
             margin-top: 10px;
+            display: none; /* Initially hide all images */
+        }
+        .listing-details img.active {
+            display: block; /* Show only the active image */
         }
         .details {
             margin-top: 20px;
@@ -37,6 +42,26 @@
         .details .large-text {
             font-size: 1.5em; /* Larger font size for title, description, and price */
         }
+        .image-container {
+            position: relative;
+        }
+        .navigation-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.7);
+            border: none;
+            padding: 20px;
+            cursor: pointer;
+            font-size: 48px; /* Increase the size of the arrows */
+            z-index: 1;
+        }
+        .prev-btn {
+            left: -60px; /* Position the button outside the image on the left */
+        }
+        .next-btn {
+            right: -60px; /* Position the button outside the image on the right */
+        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -49,19 +74,33 @@
             padding: 10px;
             text-align: left;
         }
+        #map {
+            width: 100%;
+            height: 400px;
+            margin-top: 20px;
+        }
     </style>
+    <!-- Include Google Maps JavaScript API with Places Library -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-qoIpNgQuNKGmOXJrJBDjN__6hrbeGns&libraries=places"></script>
 </head>
 <body>
 <div class="listing-details">
     <h1 class="large-text" th:text="${apartment.title}">Title</h1>
-    <img th:src="'data:image/png;base64,' + ${image}" alt="Apartment Image"/>
+    <!-- Image container -->
+    <div class="image-container">
+        <img th:each="image, index : ${images}" th:src="'data:image/png;base64,' + ${image}" alt="Apartment Image" th:class="${index.index == 0} ? 'active' : ''">
+        <!-- Navigation buttons for image pagination -->
+        <button class="navigation-btn prev-btn" onclick="prevImage()">❮</button>
+        <button class="navigation-btn next-btn" onclick="nextImage()">❯</button>
+    </div>
+    <!-- Apartment details -->
     <div class="details">
         <p class="large-text"><span>Description:</span> <span th:text="${apartment.description}">Description goes here</span></p>
         <p class="large-text"><span>Price:</span> <span th:text="${apartment.price}">Price</span></p>
         <table>
             <tr>
                 <th>Address</th>
-                <td th:text="${apartment.address}">Address goes here</td>
+                <td th:text="${apartment.address}" id="apartmentAddress">Address goes here</td>
             </tr>
             <tr>
                 <th>Rooms</th>
@@ -97,10 +136,65 @@
             </tr>
         </table>
     </div>
+    <!-- Map container -->
+    <div id="map"></div>
 </div>
+
+<script>
+    // JavaScript for image pagination
+    var currentImageIndex = 0;
+    var images = document.querySelectorAll('.image-container img');
+
+    function showImage(index) {
+        images.forEach(function(img) {
+            img.classList.remove('active');
+        });
+        images[index].classList.add('active');
+    }
+
+    function nextImage() {
+        currentImageIndex = (currentImageIndex + 1) % images.length;
+        showImage(currentImageIndex);
+    }
+
+    function prevImage() {
+        currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+        showImage(currentImageIndex);
+    }
+
+    // Show the initial image
+    showImage(currentImageIndex);
+
+    // JavaScript for initializing Google Map with geocoding
+    function initMap() {
+        var address = document.getElementById('apartmentAddress').textContent.trim();
+        var geocoder = new google.maps.Geocoder();
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 15,
+            center: {lat: 0, lng: 0} // Temporary center
+        });
+
+        geocoder.geocode({'address': apartmentAddress}, function(results, status) {
+            if (status === 'OK') {
+                map.setCenter(results[0].geometry.location);
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: results[0].geometry.location
+                });
+            } else {
+                alert('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    }
+
+    // Initialize the map when the page loads
+    window.onload = function() {
+        initMap();
+    };
+</script>
+
 </body>
 </html>
-
 
 
 
@@ -125,12 +219,14 @@
 <!--            padding: 15px;-->
 <!--            border-radius: 5px;-->
 <!--            margin-top: 20px;-->
+<!--            position: relative;-->
 <!--        }-->
 <!--        .listing-details img {-->
 <!--            width: 100%;-->
 <!--            height: auto;-->
 <!--            border-radius: 5px;-->
 <!--            margin-top: 10px;-->
+<!--            display: block; /* Ensure images are displayed as blocks */-->
 <!--        }-->
 <!--        .details {-->
 <!--            margin-top: 20px;-->
@@ -141,31 +237,123 @@
 <!--        .details span {-->
 <!--            font-weight: bold;-->
 <!--        }-->
+<!--        .details .large-text {-->
+<!--            font-size: 1.5em; /* Larger font size for title, description, and price */-->
+<!--        }-->
+<!--        .image-container {-->
+<!--            position: relative;-->
+<!--        }-->
+<!--        .navigation-btn {-->
+<!--            position: absolute;-->
+<!--            top: 50%;-->
+<!--            transform: translateY(-50%);-->
+<!--            background-color: rgba(255, 255, 255, 0.7);-->
+<!--            border: none;-->
+<!--            padding: 20px;-->
+<!--            cursor: pointer;-->
+<!--            font-size: 48px; /* Increase the size of the arrows */-->
+<!--            z-index: 1;-->
+<!--        }-->
+<!--        .prev-btn {-->
+<!--            left: -60px; /* Position the button outside the image on the left */-->
+<!--        }-->
+<!--        .next-btn {-->
+<!--            right: -60px; /* Position the button outside the image on the right */-->
+<!--        }-->
+<!--        table {-->
+<!--            width: 100%;-->
+<!--            border-collapse: collapse;-->
+<!--            margin-top: 20px;-->
+<!--        }-->
+<!--        table, th, td {-->
+<!--            border: 1px solid #ccc;-->
+<!--        }-->
+<!--        th, td {-->
+<!--            padding: 10px;-->
+<!--            text-align: left;-->
+<!--        }-->
 <!--    </style>-->
 <!--</head>-->
 <!--<body>-->
-<!--<h1>Apartment Details</h1>-->
 <!--<div class="listing-details">-->
-<!--    <h2 th:text="${apartment.title}">Title</h2>-->
-<!--    <div class="details">-->
-<!--        <p><span>Description:</span> <span th:text="${apartment.description}">Description goes here</span></p>-->
-<!--        <p><span>Price:</span> <span th:text="${apartment.price}">Price</span></p>-->
-<!--        <p><span>Address:</span> <span th:text="${apartment.address}">Address goes here</span></p>-->
-<!--        <p><span>Rooms:</span> <span th:text="${apartment.rooms}">Number of rooms</span></p>-->
-<!--        <p><span>Size:</span> <span th:text="${apartment.sqm}">Size in sqm</span></p>-->
-<!--        <p><span>Floor:</span> <span th:text="${apartment.floor}">Floor</span></p>-->
-<!--        <p><span>Terrace Size:</span> <span th:text="${apartment.terraceSqm}">Terrace size in sqm</span></p>-->
-<!--        <p><span>For Sale:</span> <span th:text="${apartment.forSale ? 'Yes' : 'No'}">Yes/No</span></p>-->
-<!--        <p><span>For Lease:</span> <span th:text="${apartment.forLease ? 'Yes' : 'No'}">Yes/No</span></p>-->
-<!--        <p><span>Owner:</span> <span th:text="${apartment.ownerName}">Owner Name</span></p>-->
-<!--        <p><span>Contact:</span> <span th:text="${apartment.phoneNumber}">Phone Number</span></p>-->
+<!--    <h1 class="large-text" th:text="${apartment.title}">Title</h1>-->
+<!--    &lt;!&ndash; Image container &ndash;&gt;-->
+<!--    <div class="image-container">-->
+<!--        <img th:each="image, index : ${images}" th:src="'data:image/png;base64,' + ${image}" alt="Apartment Image" th:class="${index.index == 0} ? 'active'">-->
+<!--        &lt;!&ndash; Navigation buttons for image pagination &ndash;&gt;-->
+<!--        <button class="navigation-btn prev-btn" onclick="prevImage()">❮</button>-->
+<!--        <button class="navigation-btn next-btn" onclick="nextImage()">❯</button>-->
 <!--    </div>-->
-<!--    <div>-->
-
-<!--        <p>Image:</p>-->
-<!--        <img th:src="'data:image/png;base64,' + ${image}" alt="Apartment Image"/>-->
-<!--        </div>-->
+<!--    &lt;!&ndash; Apartment details &ndash;&gt;-->
+<!--    <div class="details">-->
+<!--        <p class="large-text"><span>Description:</span> <span th:text="${apartment.description}">Description goes here</span></p>-->
+<!--        <p class="large-text"><span>Price:</span> <span th:text="${apartment.price}">Price</span></p>-->
+<!--        <table>-->
+<!--            <tr>-->
+<!--                <th>Address</th>-->
+<!--                <td th:text="${apartment.address}">Address goes here</td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Rooms</th>-->
+<!--                <td th:text="${apartment.rooms}">Number of rooms</td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Size (sqm)</th>-->
+<!--                <td th:text="${apartment.sqm}">Size in sqm</td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Floor</th>-->
+<!--                <td th:text="${apartment.floor}">Floor</td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Terrace Size (sqm)</th>-->
+<!--                <td th:text="${apartment.terraceSqm}">Terrace size in sqm</td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>For Sale</th>-->
+<!--                <td th:text="${apartment.forSale ? 'Yes' : 'No'}">Yes/No</td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>For Lease</th>-->
+<!--                <td th:text="${apartment.forLease ? 'Yes' : 'No'}">Yes/No</td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Owner</th>-->
+<!--                <td th:text="${apartment.ownerName}">Owner Name</td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>Contact</th>-->
+<!--                <td th:text="${apartment.phoneNumber}">Phone Number</td>-->
+<!--            </tr>-->
+<!--        </table>-->
 <!--    </div>-->
 <!--</div>-->
+
+<!--<script>-->
+<!--    // JavaScript for image pagination-->
+<!--    var currentImageIndex = 0;-->
+<!--    var images = document.querySelectorAll('.image-container img');-->
+
+<!--    function showImage(index) {-->
+<!--        images.forEach(function(img) {-->
+<!--            img.style.display = 'none';-->
+<!--        });-->
+<!--        images[index].style.display = 'block';-->
+<!--    }-->
+
+<!--    function nextImage() {-->
+<!--        currentImageIndex = (currentImageIndex + 1) % images.length;-->
+<!--        showImage(currentImageIndex);-->
+<!--    }-->
+
+<!--    function prevImage() {-->
+<!--        currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;-->
+<!--        showImage(currentImageIndex);-->
+<!--    }-->
+
+<!--    // Show the initial image-->
+<!--    showImage(currentImageIndex);-->
+<!--</script>-->
+
 <!--</body>-->
 <!--</html>-->

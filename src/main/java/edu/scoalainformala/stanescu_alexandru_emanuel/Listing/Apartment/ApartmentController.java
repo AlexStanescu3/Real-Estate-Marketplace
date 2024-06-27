@@ -1,21 +1,13 @@
 package edu.scoalainformala.stanescu_alexandru_emanuel.Listing.Apartment;
 
-import jakarta.annotation.Resource;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.print.attribute.standard.Media;
-import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
 
@@ -50,15 +42,16 @@ public class ApartmentController {
 
     @GetMapping("/view/{id}")
     public String viewApartment(@PathVariable int id, Model model) {
-        Apartment ap = apartmentService.get(id);
-        byte[] imageData = apartmentService.downloadImage(id);
-        String base64Image = Base64.getEncoder().encodeToString(imageData);
+        Apartment apartment = apartmentService.get(id);
+        List<byte[]> imageBytesList = apartment.getImageData(); // Assuming Apartment has List<byte[]> imageData
 
-        model.addAttribute("apartment", ap);
-        model.addAttribute("image", base64Image);
+        List<String> base64Images = imageBytesList.stream()
+                .map(imageData -> Base64.getEncoder().encodeToString(imageData))
+                .collect(Collectors.toList());
 
+        model.addAttribute("apartment", apartment);
+        model.addAttribute("images", base64Images);
         return "viewApartment";
-
     }
 
     @GetMapping("/create")
@@ -69,58 +62,17 @@ public class ApartmentController {
     }
 
     @PostMapping("/create")
-    public String createApartment(@ModelAttribute Apartment apartment, @RequestParam("images") MultipartFile images, Model model) {
+    public String createApartment(@ModelAttribute Apartment apartment, @RequestParam("images") List<MultipartFile> images, Model model) {
         try {
-            System.out.println("am intrat in controller");
+            System.out.println(" the multipart file "+images);
             apartmentService.save(apartment, images);
         } catch (Exception e) {
-            System.out.println("am intrat mai adanc in controller");
             e.printStackTrace();
             model.addAttribute("errorMessage", "Error saving apartment. Please try again.");
             return "createApartment";
         }
         return "redirect:/apartment/all";
     }
-
-   /* @GetMapping("/{id}")
-    public ResponseEntity<?> downloadImage(@PathVariable Integer id) {
-        byte[] imageData = apartmentService.downloadImage(id);
-        return ResponseEntity.status(HttpStatus.OK)
-                .contentType(MediaType.valueOf(IMAGE_PNG_VALUE))
-                .body(imageData);
-    }*/
-
-
-//    @PostMapping
-//    public String createApartment(@ModelAttribute Apartment apartment) {
-//
-//        apartmentService.add(apartment);
-//        return "redirect:/apartment/all";
-//    }
-
-//    @PostMapping
-//    public String createApartmentWithImages(@ModelAttribute Apartment apartment, BindingResult bindingResult) {
-//        if (bindingResult.hasErrors()) {
-//            return "error " + bindingResult.getAllErrors();
-//        }
-//        try {
-//            apartmentService.save(apartment);
-//            return "redirect:/apartment/all";
-//        } catch (IOException e) {
-//            return e.getMessage();
-//        }
-//    }
-
-//    @PostMapping
-//    public String createApartmentWithImages(@ModelAttribute Apartment apartment, @RequestParam("images") List<MultipartFile> images) {
-//        try {
-//            apartmentService.save(apartment, images);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return "error";
-//        }
-//        return "redirect:/apartment/all";
-//    }
 
     @PostMapping("/{id}")
     public String update(@PathVariable Integer id, @ModelAttribute Apartment apartment) {

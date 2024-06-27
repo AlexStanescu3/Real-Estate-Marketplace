@@ -19,6 +19,12 @@
             padding: 20px;
             margin-bottom: 20px;
             border-radius: 5px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+        .apartment-info {
+            flex-grow: 1;
         }
         .apartment-title {
             font-size: 24px;
@@ -34,9 +40,14 @@
         .apartment-details p {
             margin: 5px 0;
         }
-         .button {
+        .apartment-image {
+            margin-left: 20px;
+            max-width: 200px;
+            max-height: 200px;
+        }
+        .button {
             width: 30px;
-         }
+        }
     </style>
 </head>
 <body>
@@ -45,23 +56,29 @@
     <h1>Apartment Listings</h1>
 
     <div th:each="apartment : ${apartments}" class="apartment-listing">
-        <div class="apartment-title" th:text="${apartment.title}">Apartment Title</div>
-        <a th:href="${apartment.id}"><img class="button" src="/edit-button.svg"></a>
-        <div class="apartment-price"
-             th:text="${apartment.isForSale ? '€' + apartment.price : '$' + apartment.price + ' / month'}">Price
+        <div class="apartment-info">
+            <div class="apartment-title" th:text="${apartment.title}">Apartment Title</div>
+            <a th:href="${apartment.id}"><img class="button" src="/edit-button.svg"></a>
+            <a th:href="'delete/' + ${apartment.id}"><img class="button" src="/delete-button.jpg"></a>
+            <div class="apartment-price"
+                 th:text="${apartment.isForSale ? '€' + apartment.price : '$' + apartment.price + ' / month'}">Price
+            </div>
+            <div class="apartment-details">
+                <p><strong>Description:</strong> <span th:text="${apartment.description}">Description</span></p>
+                <p><strong>Address:</strong> <span th:text="${apartment.address}">Address</span></p>
+                <p><strong>Rooms:</strong> <span th:text="${apartment.rooms}">Rooms</span></p>
+                <p><strong>Size:</strong> <span th:text="${apartment.sqm}">Size</span> sqm</p>
+                <p><strong>Floor:</strong> <span th:text="${apartment.floor}">Floor</span></p>
+                <p><strong>Terrace:</strong> <span th:text="${apartment.terraceSqm}">Terrace</span> sqm</p>
+                <p><strong>For Sale:</strong> <span th:text="${apartment.isForSale ? 'Yes' : 'No'}">For Sale</span></p>
+                <p><strong>For Lease:</strong> <span th:text="${apartment.isForLease ? 'Yes' : 'No'}">For Lease</span></p>
+                <p><strong>Owner:</strong> <span th:text="${apartment.ownerName}">Owner</span></p>
+                <p><strong>Contact:</strong> <span th:text="${apartment.phoneNumber}">Contact</span></p>
+                <p><strong>ID:</strong> <span th:text="${apartment.id}">ID</span></p>
+            </div>
         </div>
-        <div class="apartment-details">
-            <p><strong>Description:</strong> <span th:text="${apartment.description}">Description</span></p>
-            <p><strong>Address:</strong> <span th:text="${apartment.address}">Address</span></p>
-            <p><strong>Rooms:</strong> <span th:text="${apartment.rooms}">Rooms</span></p>
-            <p><strong>Size:</strong> <span th:text="${apartment.sqm}">Size</span> sqm</p>
-            <p><strong>Floor:</strong> <span th:text="${apartment.floor}">Floor</span></p>
-            <p><strong>Terrace:</strong> <span th:text="${apartment.terraceSqm}">Terrace</span> sqm</p>
-            <p><strong>For Sale:</strong> <span th:text="${apartment.isForSale ? 'Yes' : 'No'}">For Sale</span></p>
-            <p><strong>For Lease:</strong> <span th:text="${apartment.isForLease ? 'Yes' : 'No'}">For Lease</span></p>
-            <p><strong>Owner:</strong> <span th:text="${apartment.ownerName}">Owner</span></p>
-            <p><strong>Contact:</strong> <span th:text="${apartment.phoneNumber}">Contact</span></p>
-            <p><strong>ID:</strong> <span th:text="${apartment.id}">ID</span></p>
+        <div class="apartment-image">
+            <img th:src="'data:image/png;base64,' + ${image}" alt="Apartment Image"/>
         </div>
     </div>
 
@@ -69,3 +86,78 @@
 
 </body>
 </html>
+
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Apartment Listings</title>-->
+<!--    <style>-->
+<!--        body {-->
+<!--            font-family: Arial, sans-serif;-->
+<!--            margin: 0;-->
+<!--            padding: 0;-->
+<!--        }-->
+<!--        .container {-->
+<!--            width: 80%;-->
+<!--            margin: 0 auto;-->
+<!--            padding: 20px;-->
+<!--        }-->
+<!--        .apartment-listing {-->
+<!--            border: 1px solid #ddd;-->
+<!--            padding: 20px;-->
+<!--            margin-bottom: 20px;-->
+<!--            border-radius: 5px;-->
+<!--        }-->
+<!--        .apartment-title {-->
+<!--            font-size: 24px;-->
+<!--            font-weight: bold;-->
+<!--        }-->
+<!--        .apartment-price {-->
+<!--            font-size: 20px;-->
+<!--            color: green;-->
+<!--        }-->
+<!--        .apartment-details {-->
+<!--            margin-top: 10px;-->
+<!--        }-->
+<!--        .apartment-details p {-->
+<!--            margin: 5px 0;-->
+<!--        }-->
+<!--         .button {-->
+<!--            width: 30px;-->
+<!--         }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<div class="container">-->
+<!--    <h1>Apartment Listings</h1>-->
+
+<!--    <div th:each="apartment : ${apartments}" class="apartment-listing">-->
+<!--        <div class="apartment-title" th:text="${apartment.title}">Apartment Title</div>-->
+<!--        <a th:href="${apartment.id}"><img class="button" src="/edit-button.svg"></a>-->
+<!--        <div class="apartment-price"-->
+<!--             th:text="${apartment.isForSale ? '€' + apartment.price : '$' + apartment.price + ' / month'}">Price-->
+<!--        </div>-->
+<!--        <div class="apartment-details">-->
+<!--            <p><strong>Description:</strong> <span th:text="${apartment.description}">Description</span></p>-->
+<!--            <p><strong>Address:</strong> <span th:text="${apartment.address}">Address</span></p>-->
+<!--            <p><strong>Rooms:</strong> <span th:text="${apartment.rooms}">Rooms</span></p>-->
+<!--            <p><strong>Size:</strong> <span th:text="${apartment.sqm}">Size</span> sqm</p>-->
+<!--            <p><strong>Floor:</strong> <span th:text="${apartment.floor}">Floor</span></p>-->
+<!--            <p><strong>Terrace:</strong> <span th:text="${apartment.terraceSqm}">Terrace</span> sqm</p>-->
+<!--            <p><strong>For Sale:</strong> <span th:text="${apartment.isForSale ? 'Yes' : 'No'}">For Sale</span></p>-->
+<!--            <p><strong>For Lease:</strong> <span th:text="${apartment.isForLease ? 'Yes' : 'No'}">For Lease</span></p>-->
+<!--            <p><strong>Owner:</strong> <span th:text="${apartment.ownerName}">Owner</span></p>-->
+<!--            <p><strong>Contact:</strong> <span th:text="${apartment.phoneNumber}">Contact</span></p>-->
+<!--            <p><strong>ID:</strong> <span th:text="${apartment.id}">ID</span></p>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--</div>-->
+
+<!--</body>-->
+<!--</html>-->

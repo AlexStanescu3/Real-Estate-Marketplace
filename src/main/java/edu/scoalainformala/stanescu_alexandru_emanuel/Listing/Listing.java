@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @MappedSuperclass
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Listing {
     @Id
     @SequenceGenerator(
@@ -42,11 +43,9 @@ public abstract class Listing {
     public String imageName;
     public String imageType;
 
-//    @ElementCollection
-//    @CollectionTable(name = "listing_images", joinColumns = @JoinColumn(name = "listing_id"))
-//    @Column(name = "image_data")
-    @Lob
+    @ElementCollection
+    @CollectionTable(name = "listing_image_data", joinColumns = @JoinColumn(name = "listing_id"))
+    @Column(name = "image_data")
     @JdbcTypeCode(Types.LONGVARBINARY)
-    public byte[] imageData;
-
+    public List<byte[]> imageData;
 }
