@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<div id="navbar-placeholder"></div>
 <head>
     <meta charset="UTF-8">
     <title>Create new listing!</title>
@@ -48,5 +49,17 @@
         <img class="image" src="/house.jpg" alt="House">
     </div>
 </div>
+
+<script>
+    // Load the navbar component
+       fetch('/navbar.html')
+           .then(response => response.text())
+           .then(data => {
+               document.getElementById('navbar-placeholder').innerHTML = data;
+           })
+           .catch(error => console.error('Error loading the navbar:', error));
+
+</script>
+
 </body>
 </html>

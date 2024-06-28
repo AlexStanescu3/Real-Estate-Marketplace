@@ -6,7 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
@@ -24,8 +26,21 @@ public class ApartmentController {
 
     @GetMapping("/all")
     public String getApartments(Model model) {
+        List<Apartment>  apartments= apartmentService.getAll();
+        Map<Integer,List<String>> imagesPerApartment = new HashMap<>();
+        for(Apartment ap: apartments){
+            List<byte[]> imageBytesList = ap.getImageData();
+            List<String> base64Images = imageBytesList.stream()
+                    .map(imageData -> Base64.getEncoder().encodeToString(imageData))
+                    .collect(Collectors.toList());
+            imagesPerApartment.put(ap.getId(),base64Images);
+        }
+        // Assuming Apartment has List<byte[]> imageData
 
-        model.addAttribute("apartments", apartmentService.getAll());
+
+
+        model.addAttribute("apartments", apartments);
+        model.addAttribute("images",imagesPerApartment);
 
         return "apartments.html";
 
