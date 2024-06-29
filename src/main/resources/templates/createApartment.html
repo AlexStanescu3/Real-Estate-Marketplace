@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<div id="navbar-placeholder"></div>
 <head>
     <meta charset="UTF-8">
+    <div id="navbar-placeholder"></div>
     <title>Create Apartment Listing</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 800px;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 60%;
             margin: 0 auto;
             padding: 20px;
-        }
+
         h1 {
             text-align: center;
         }
@@ -41,6 +45,7 @@
     </style>
 </head>
 <body>
+<div class="container">
 <h1>Create Apartment Listing</h1>
 <form th:action="@{/apartment/create}" th:object="${apartment}" method="post" enctype="multipart/form-data">
     <label for="title">Title:</label>
@@ -85,6 +90,7 @@
     <button type="submit">Create Listing</button>
 </form>
 <div th:if="${errorMessage}" class="error" th:text="${errorMessage}"></div>
+</div>
 
 <script>
     // Load the navbar component

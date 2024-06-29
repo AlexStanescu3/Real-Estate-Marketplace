@@ -6,7 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
 
+import java.sql.Types;
+import java.util.List;
 import java.util.Objects;
 
 @Data
@@ -14,12 +17,17 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table
+@Table(name = "apartment")
 
 public class Apartment extends Listing {
 
     public int floor;
     public int terraceSqm;
+    @ElementCollection
+    @CollectionTable(name = "listing_image_data", joinColumns = @JoinColumn(name = "listing_id"))
+    @Column(name = "image_data")
+    @JdbcTypeCode(Types.LONGVARBINARY)
+    public List<byte[]> imageData;
 
 
     @Override

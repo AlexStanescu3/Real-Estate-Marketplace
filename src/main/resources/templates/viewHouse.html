@@ -3,7 +3,7 @@
 <div id="navbar-placeholder"></div>
 <head>
     <meta charset="UTF-8">
-    <title>Apartment Details</title>
+    <title>House Details</title>
 
     <style>
         body {
@@ -95,139 +95,136 @@
 </head>
 <body>
 <div class="listing-details">
-    <h1 class="large-text" th:text="${apartment.title}">Title</h1>
+    <h1 class="large-text" th:text="${house.title}">Title</h1>
     <!-- Image container -->
     <div class="image-container">
-        <img th:each="image, index : ${images}" th:src="'data:image/png;base64,' + ${image}" alt="Apartment Image"
+        <img th:each="image, index : ${images}" th:src="'data:image/png;base64,' + ${image}" alt="House Image"
              th:class="${index.index == 0} ? 'active' : ''">
         <!-- Navigation buttons for image pagination -->
         <button class="navigation-btn prev-btn" onclick="prevImage()">❮</button>
         <button class="navigation-btn next-btn" onclick="nextImage()">❯</button>
     </div>
-    <!-- Apartment details -->
+    <!-- House details -->
     <div class="details">
         <p class="large-text"><span>Description:</span> <span
-                th:text="${apartment.description}">Description goes here</span></p>
-        <p class="large-text"><span>Price:</span> <span th:text="${apartment.price}">Price</span> €</p>
+                th:text="${house.description}">Description goes here</span></p>
+        <p class="large-text"><span>Price:</span> <span th:text="${house.price}">Price</span> €</p>
         <table>
             <tr>
                 <th>Address</th>
-                <td th:text="${apartment.address}" id="apartmentAddress">Address goes here</td>
+                <td th:text="${house.address}" id="houseAddress">Address goes here</td>
             </tr>
             <tr>
                 <th>Rooms</th>
-                <td th:text="${apartment.rooms}">Number of rooms</td>
+                <td th:text="${house.rooms}">Number of rooms</td>
             </tr>
             <tr>
                 <th>Size (sqm)</th>
-                <td th:text="${apartment.sqm}">Size in sqm</td>
+                <td th:text="${house.sqm}">Size in sqm</td>
             </tr>
             <tr>
-                <th>Floor</th>
-                <td th:text="${apartment.floor}">Floor</td>
+                <th>Floors</th>
+                <td th:text="${house.floors}">Floors</td>
             </tr>
             <tr>
-                <th>Terrace Size (sqm)</th>
-                <td th:text="${apartment.terraceSqm}">Terrace size in sqm</td>
+                <th>Land Size (sqm)</th>
+                <td th:text="${house.landSqm}">Land size in sqm</td>
             </tr>
             <tr>
                 <th>For Sale</th>
-                <td th:text="${apartment.forSale ? 'Yes' : 'No'}">Yes/No</td>
+                <td th:text="${house.forSale ? 'Yes' : 'No'}">Yes/No</td>
             </tr>
             <tr>
                 <th>For Lease</th>
-                <td th:text="${apartment.forLease ? 'Yes' : 'No'}">Yes/No</td>
+                <td th:text="${house.forLease ? 'Yes' : 'No'}">Yes/No</td>
             </tr>
             <tr>
                 <th>Owner</th>
-                <td th:text="${apartment.ownerName}">Owner Name</td>
+                <td th:text="${house.ownerName}">Owner Name</td>
             </tr>
             <tr>
                 <th>Contact</th>
-                <td th:text="${apartment.phoneNumber}">Phone Number</td>
+                <td th:text="${house.phoneNumber}">Phone Number</td>
             </tr>
         </table>
-
-</div>
+    </div>
 </div>
 <!-- Map container -->
 <div id="map"></div>
 
 <script>
-
-
     // Load the navbar component
-       fetch('/navbar.html')
-           .then(response => response.text())
-           .then(data => {
-               document.getElementById('navbar-placeholder').innerHTML = data;
-           })
-           .catch(error => console.error('Error loading the navbar:', error));
+    fetch('/navbar.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('navbar-placeholder').innerHTML = data;
+        })
+        .catch(error => console.error('Error loading the navbar:', error));
 
     // JavaScript for image pagination
     var currentImageIndex = 0;
     var images = document.querySelectorAll('.image-container img');
 
     function showImage(index) {
-       images.forEach(function(img) {
-           img.classList.remove('active');
-       });
-       images[index].classList.add('active');
+        images.forEach(function(img) {
+            img.classList.remove('active');
+        });
+        images[index].classList.add('active');
     }
 
     function nextImage() {
-       currentImageIndex = (currentImageIndex + 1) % images.length;
-       showImage(currentImageIndex);
+        currentImageIndex = (currentImageIndex + 1) % images.length;
+        showImage(currentImageIndex);
     }
 
     function prevImage() {
-       currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
-       showImage(currentImageIndex);
+        currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+        showImage(currentImageIndex);
     }
 
     // Show the initial image
     showImage(currentImageIndex);
 
-  var geocoder;
-        var map;
+    var geocoder;
+    var map;
 
-        function initialize() {
-            console.log('Initializing map...');
-            geocoder = new google.maps.Geocoder();
-            var latlng = new google.maps.LatLng(-34.397, 150.644); // Initial center coordinates
-            var mapOptions = {
-                zoom: 8, // Initial zoom level
-                center: latlng // Initial center position
-            };
-            map = new google.maps.Map(document.getElementById('map'), mapOptions);
-            console.log('Map initialized.');
-
-            // Call codeAddress() automatically on page load
-            setTimeout(function() {
-                codeAddress();
-            }, 1000); // Adjust delay time as needed
-        }
-
-        function codeAddress() {
-            var address = document.getElementById('apartmentAddress').innerText.trim();
-            console.log('Address:', address);
-            geocoder.geocode({'address': address}, function(results, status) {
-                if (status === 'OK') {
-                    console.log('Geocode results:', results);
-                    map.setCenter(results[0].geometry.location);
-                    var marker = new google.maps.Marker({
-                        map: map,
-                        position: results[0].geometry.location
-                    });
-                } else {
-                    alert('Geocode was not successful for the following reason: ' + status);
-                }
-            });
-        }
-        // Initialize the map when the page loads
-        window.onload = function() {
-            initialize();
+    function initialize() {
+        console.log('Initializing map...');
+        geocoder = new google.maps.Geocoder();
+        var latlng = new google.maps.LatLng(-34.397, 150.644); // Initial center coordinates
+        var mapOptions = {
+            zoom: 8, // Initial zoom level
+            center: latlng // Initial center position
         };
+        map = new google.maps.Map(document.getElementById('map'), mapOptions);
+        console.log('Map initialized.');
+
+        // Call codeAddress() automatically on page load
+        setTimeout(function() {
+            codeAddress();
+        }, 1000); // Adjust delay time as needed
+    }
+
+    function codeAddress() {
+        var address = document.getElementById('houseAddress').innerText.trim();
+        console.log('Address:', address);
+        geocoder.geocode({'address': address}, function(results, status) {
+            if (status === 'OK') {
+                console.log('Geocode results:', results);
+                map.setCenter(results[0].geometry.location);
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: results[0].geometry.location
+                });
+            } else {
+                alert('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    }
+    // Initialize the map when the page loads
+    window.onload = function() {
+        initialize();
+    };
 </script>
 
 </body>

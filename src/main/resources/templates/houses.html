@@ -1,10 +1,130 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <div id="navbar-placeholder"></div>
+    <title>House Listings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .house-listing {
+            border: 3px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+        .house-info {
+            flex-grow: 1;
+        }
+        .house-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: black;
+            margin-bottom: 15px;
+        }
+        .house-title-link {
+            text-decoration: none;
+            color: black;
+        }
+        .house-price {
+            font-size: 20px;
+            color: green;
+        }
+        .house-details {
+            margin-top: 10px;
+        }
+        .house-details p {
+            margin: 5px 0;
+        }
+       .house-image {
+    width: 520px;
+    height: auto;
+    overflow: visible;
+    position: relative;
+    text-align: center;
+}
+
+       .house-image img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+        .button {
+            width: 30px;
+        }
+    </style>
 </head>
 <body>
+
+<div class="container">
+    <h1>House Listings</h1>
+
+    <div th:each="house : ${houses}" class="house-listing">
+        <div class="house-info">
+            <a th:href="@{/house/view/{id}(id=${house.id})}" class="house-title-link">
+                <div class="house-title" th:text="${house.title}">House Title</div>
+            </a>
+            <a th:href="${house.id}"><img class="button" src="/edit-button.svg"></a>
+            <a th:href="'delete/' + ${house.id}"><img class="button" src="/delete-button.jpg"></a>
+            <div class="house-price"
+                 th:text="${house.isForSale ? '€' + house.price : '$' + house.price + ' / month'}">Price
+            </div>
+            <div class="house-details">
+                <p><strong>Description:</strong> <span th:text="${house.description}">Description</span></p>
+                <p><strong>Address:</strong> <span th:text="${house.address}">Address</span></p>
+                <p><strong>Rooms:</strong> <span th:text="${house.rooms}">Rooms</span></p>
+                <p><strong>Size:</strong> <span th:text="${house.sqm}">Size</span> sqm</p>
+                <p><strong>Floors:</strong> <span th:text="${house.floors}">Floors</span></p>
+                <p><strong>Land:</strong> <span th:text="${house.landSqm}">Land</span> sqm</p>
+                <p><strong>For Sale:</strong> <span th:text="${house.isForSale ? 'Yes' : 'No'}">For Sale</span></p>
+                <p><strong>For Lease:</strong> <span th:text="${house.isForLease ? 'Yes' : 'No'}">For Lease</span>
+                </p>
+                <p><strong>Owner:</strong> <span th:text="${house.ownerName}">Owner</span></p>
+                <p><strong>Contact:</strong> <span th:text="${house.phoneNumber}">Contact</span></p>
+                <p><strong>ID:</strong> <span th:text="${house.id}">ID</span></p>
+            </div>
+        </div>
+        <div class="house-image">
+
+            <img th:if="${images[house.id].size() > 0}"
+                 th:src="'data:image/png;base64,' + ${images[house.id][0]}"
+                 alt="House Image">
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Load the navbar component
+    fetch('/navbar.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('navbar-placeholder').innerHTML = data;
+        })
+        .catch(error => console.error('Error loading the navbar:', error));
+
+    // JavaScript to show the initial image (the first one)
+    document.querySelectorAll('.house-image img').forEach(function(img) {
+        img.style.display = 'none'; // Hide all images initially
+    });
+
+    // Display the first image for each house listing
+    document.querySelectorAll('.house-image img').forEach(function(img) {
+        img.style.display = 'block'; // Display the first image
+    });
+</script>
 
 </body>
 </html>

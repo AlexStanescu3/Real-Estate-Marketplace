@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -45,6 +44,7 @@ public class ApartmentService {
     }
 
     public void save(Apartment apartment, List<MultipartFile> imageFiles) throws IOException {
+        System.out.println(" i end up here");
         List<byte[]> images = new ArrayList<>();
         for (MultipartFile file : imageFiles) {
             images.add(file.getBytes());

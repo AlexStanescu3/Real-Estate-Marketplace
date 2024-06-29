@@ -1,6 +1,5 @@
 package edu.scoalainformala.stanescu_alexandru_emanuel.Listing.Apartment;
 
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,8 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
 
 @Controller
 @RequestMapping("/apartment")
@@ -35,7 +32,6 @@ public class ApartmentController {
                     .collect(Collectors.toList());
             imagesPerApartment.put(ap.getId(),base64Images);
         }
-        // Assuming Apartment has List<byte[]> imageData
 
 
 
