@@ -40,6 +40,7 @@ public abstract class Listing {
     public int sqm;
     public boolean ForSale;
     public boolean ForLease;
+    public int constructionYear;
     public String ownerName;
     public String phoneNumber;
     public String imageName;
